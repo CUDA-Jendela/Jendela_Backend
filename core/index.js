@@ -1,15 +1,10 @@
-import express, { Express } from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
-import * as admin from "firebase-admin";
-import serverConfig from './config/server-config'
-import db from './database/firebase'
+const express = require('express')
+const cors = require('cors')
+const morgan = require('morgan')
+const serverConfig = require('./config/server-config')
+const db = require('./database/firebase')
 
 class Application {
-    private express: Express;
-    private serverConfig : any;
-    private db: admin.firestore.Firestore;
-
     constructor() {
         this.express = express();
         this.serverConfig = serverConfig;
@@ -29,10 +24,6 @@ class Application {
         });
     }
 
-    getDatabase() {
-        return this.db
-    }
-
     run() {
         this.express.listen(this.serverConfig.port, ()=> {
             this.setupServer();
@@ -42,4 +33,4 @@ class Application {
     }
 }
 
-export default new Application();
+module.exports = new Application();

@@ -16,11 +16,8 @@ COPY . .
 # Copy the .env file
 COPY .env .env
 
-# Build the TypeScript code
-RUN npx tsc
-
 # Expose the port the app runs on
 EXPOSE 8080
 
 # Define the command to run the app
-CMD ["node", "dist/server.js"]
+CMD ["npm", "run", "dev"]
