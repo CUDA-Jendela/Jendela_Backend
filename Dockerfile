@@ -13,6 +13,12 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+# Copy the .env file
+COPY .env .env
+
+# Copy Firebase service account file
+COPY src/config/cuda-jendela-firebase-adminsdk-mx69c-8773d17152.json ./src/config/
+
 # Build the TypeScript code
 RUN npx tsc
 
