@@ -16,14 +16,11 @@ COPY . .
 # Copy the .env file
 COPY .env .env
 
-# Copy Firebase service account file
-COPY src/config/cuda-jendela-firebase-adminsdk-mx69c-8773d17152.json ./src/config/
-
 # Build the TypeScript code
 RUN npx tsc
 
 # Expose the port the app runs on
-EXPOSE 3000
+EXPOSE 8080
 
 # Define the command to run the app
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/server.js"]
