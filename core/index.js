@@ -4,6 +4,8 @@ const morgan = require('morgan')
 const serverConfig = require('./config/server-config')
 const db = require('./database/firebase')
 
+const authApi = require('../components/auth/auth-api')
+
 class Application {
     constructor() {
         this.express = express();
@@ -22,6 +24,8 @@ class Application {
         this.express.get("/", (req, res) => {
             res.send("Hello, world!");
         });
+
+        this.express.use("/api", authApi)
     }
 
     run() {

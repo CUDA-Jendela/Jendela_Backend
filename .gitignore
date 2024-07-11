@@ -1,3 +1,4 @@
 .idea
 node_modules
 .env
+/src/config/cuda-jendela-firebase-adminsdk-mx69c-8773d17152.json
