@@ -4,7 +4,8 @@ const morgan = require('morgan')
 const serverConfig = require('./config/server-config')
 const db = require('./database/firebase')
 
-const authApi = require('../components/auth/auth-api')
+const authApis = require('../components/auth/auth-api')
+const customerApis = require('../components/customer/customer-api')
 
 class Application {
     constructor() {
@@ -25,13 +26,20 @@ class Application {
             res.send("Hello, world!");
         });
 
-        this.express.use("/api", authApi)
+        // User and auth apis
+        this.express.use("/api", authApis)
+
+        // Customer apis
+        this.express.use("/api", customerApis)
+    }
+
+    getDatabase() {
+        return this.db
     }
 
     run() {
         this.express.listen(this.serverConfig.port, ()=> {
             this.setupServer();
-            console.log(this.db)
             console.log(`Server listening on http://localhost:${this.serverConfig.port}`)
         })
     }
