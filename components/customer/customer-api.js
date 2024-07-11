@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const customerController = require('./customer-controller')
 
-router.post('/customer', customerController.addUserData)
+router.post('/customer', customerController.addCustomerData)
 
 module.exports = router
