@@ -30,7 +30,7 @@ class Application {
         // Register all api
         // Test api
         this.express.get("/", (req, res) => {
-            res.send("Hello, world!");
+            res.send("Welcome to Jendela Backend Web Services!");
         });
 
         // User and auth apis
