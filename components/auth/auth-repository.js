@@ -1,8 +1,8 @@
-const app = require('../../core')
+const db = require('../../core/database/firebase')
 
 class AuthRepository {
     constructor() {
-        this.collection = app.getDatabase().collection('customers')
+        this.collection = db.collection('users')
     }
 
     async createUser(user) {

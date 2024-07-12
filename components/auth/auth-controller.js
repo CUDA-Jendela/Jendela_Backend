@@ -25,10 +25,20 @@ const register = async (req, res) => {
             isVerified: false,
         };
         const userRef = await repo.createUser(newUser);
+        const token = jwt.sign(
+            {
+                id: userRef.id,
+                email: newUser.email,
+                role: newUser.role,
+                isVerified: newUser.isVerified
+            },
+            JWT_SECRET,
+            { expiresIn: '1h' }
+        );
         res.status(201).json({
             success: true,
             message: "User registered successfully",
-            userId: userRef.id,
+            token
         });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
