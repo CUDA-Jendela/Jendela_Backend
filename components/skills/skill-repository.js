@@ -20,7 +20,7 @@ class SkillRepository {
         snapshot.forEach(doc => {
             skills.push({
                 id: doc.id,
-                ...doc.data().name
+                ...doc.data()
             });
         })
 
