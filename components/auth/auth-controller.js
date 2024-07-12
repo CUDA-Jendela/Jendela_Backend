@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const AuthRepository = require("./auth-repository");
+const CustomerRepository = require("../customer/customer-repository");
+const NGORepository = require("../ngo/ngo-repository");
+const BusinessRepository = require("../business/business-repository");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -83,15 +86,47 @@ module.exports = {
 
     async getMe(req, res) {
         const authRepo = new AuthRepository();
-        console.log("HELO");
+        const customerRepo = new CustomerRepository();
+        const ngoRepo = new NGORepository();
+        const businessRepo = new BusinessRepository();
+
         try {
-            const user = await authRepo.findUserById(req.body.userID);
+            const role = req.body.role;
+            const userID = req.body.userID;
+            const user = await authRepo.findUserById(userID);
             if (!user) {
                 return res
                     .status(404)
                     .json({ success: false, message: "User not found" });
             }
-            res.status(200).json({ success: true, user });
+
+            let additionalData = {};
+
+            if (role === "customer") {
+                const customer = await customerRepo.findCustomerByUserID(
+                    userID
+                );
+                console.log("customer", customer, userID);
+                additionalData = { name: customer.name };
+            } else if (user.role === "business") {
+                const business = await businessRepo.findBusinessByUserID(
+                    userID
+                );
+                additionalData = { name: business.name };
+            } else if (user.role === "ngo") {
+                const ngo = await ngoRepo.findNGOByUserID(userID);
+                console.log("NGOID", ngo);
+                additionalData = { name: ngo.name };
+            }
+            const response = {
+                id: user.id,
+                email: user.email,
+                role: user.role,
+                isVerified: user.isVerified,
+                username: user.username,
+                ...additionalData,
+            };
+            res.status(200).json({ success: true, user: response });
         } catch (error) {
             res.status(400).json({ success: false, message: error.message });
         }

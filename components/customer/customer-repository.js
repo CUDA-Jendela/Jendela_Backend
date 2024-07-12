@@ -18,9 +18,9 @@ class CustomerRepository {
         return result;
     }
 
-    async findCustomerByUserID(user_id) {
+    async findCustomerByUserID(userID) {
         const snapshot = await this.collection
-            .where("user_id", "==", user_id)
+            .where("userID", "==", userID)
             .get();
         if (snapshot.empty) {
             return null;
