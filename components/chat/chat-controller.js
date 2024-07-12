@@ -1,14 +1,10 @@
-const { VertexAI } = require("@google-cloud/vertexai");
+const { GoogleGenerativeAI } = require("@google/generative-ai")
 const ChatRepository = require('./chat-repository')
 
-const vertexAI = new VertexAI({
-    project: process.env.PROJECT_ID,
-    location: "us-central1",
-    
-});
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY)
 
-const generativeModel = vertexAI.getGenerativeModel({
-    model: "gemini-1.5-flash-001",
+const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",
 });
 
 module.exports = {
@@ -45,22 +41,14 @@ module.exports = {
             }
 
             const chats = existingChat ? existingChat.chats : [];
-            const questions = [];
-            chats.forEach(chat => {
-                questions.push({
-                    text: chat.question
-                });
-            });
-            questions.push({
-                text: prompt
-            });
 
-            const chatroom = generativeModel.startChat({
-                history: questions
-            });
-            const result = await chatroom.sendMessage(prompt);
-            const response = await result.response;
-            const geminiResponse = await response.text();
+            const result = await model.generateContent(prompt + "Please answer in 2-3 short sentences with punctuation as necessary and in the languange of original question.");
+            const response = result.response;
+            let geminiResponse = response.text();
+            if (geminiResponse.endsWith("\n")) {
+                geminiResponse = geminiResponse.slice(0, -1);
+            }
+
             chats.push({
                 question: prompt,
                 answer: geminiResponse
@@ -78,7 +66,7 @@ module.exports = {
         catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error
+                message: error.message
             });
         }
     }
