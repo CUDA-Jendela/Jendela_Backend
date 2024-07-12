@@ -107,16 +107,22 @@ module.exports = {
                     userID
                 );
                 console.log("customer", customer, userID);
-                additionalData = { name: customer.name };
+                additionalData = {
+                    name: customer.name,
+                    customer_id: customer.id,
+                };
             } else if (user.role === "business") {
                 const business = await businessRepo.findBusinessByUserID(
                     userID
                 );
-                additionalData = { name: business.name };
+                additionalData = {
+                    name: business.name,
+                    business_id: business.id,
+                };
             } else if (user.role === "ngo") {
                 const ngo = await ngoRepo.findNGOByUserID(userID);
                 console.log("NGOID", ngo);
-                additionalData = { name: ngo.name };
+                additionalData = { name: ngo.name, ngo_id: ngo.id };
             }
             const response = {
                 id: user.id,
