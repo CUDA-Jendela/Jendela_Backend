@@ -13,11 +13,13 @@ module.exports = {
             const existingUser = await authRepo.findUserById(userID)
             if (!existingUser) {
                 return res.status(400).json({
+                    success: false,
                     message: "User does not exist"
                 })
             }
             else if (existingUser.isVerified) {
                 return res.status(400).json({
+                    success: false,
                     message: "User already verified"
                 })
             }
@@ -31,7 +33,7 @@ module.exports = {
             
             return res.status(200).json({
                 success: true,
-                data: result
+                result
             })
         }
         catch (error) {
