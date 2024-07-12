@@ -1,9 +1,8 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const AuthRepository = require("./auth-repository");
-const { messaging } = require("firebase-admin");
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 module.exports = {
     async register(req, res) {
@@ -84,8 +83,9 @@ module.exports = {
 
     async getMe(req, res) {
         const authRepo = new AuthRepository();
+        console.log("HELO");
         try {
-            const user = await authRepo.findUserById(req.body.id);
+            const user = await authRepo.findUserById(req.body.userID);
             if (!user) {
                 return res
                     .status(404)

@@ -7,6 +7,7 @@ const db = require("./database/firebase");
 const authApis = require("../components/auth/auth-api");
 const customerApis = require("../components/customer/customer-api");
 const ngoApis = require("../components/ngo/ngo-api");
+const enrollmentApis = require("../components/course-enrollment/course-enrollment-api");
 
 class Application {
     constructor() {
@@ -35,6 +36,9 @@ class Application {
 
         // NGO apis
         this.express.use("/api", ngoApis);
+
+        // Course Enrollment apis
+        this.express.use("/api", enrollmentApis);
     }
 
     getDatabase() {

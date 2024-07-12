@@ -1,8 +1,8 @@
-const db = require('../../core/database/firebase')
+const db = require("../../core/database/firebase");
 
 class CustomerRepository {
     constructor() {
-        this.collection = db.collection('customers')
+        this.collection = db.collection("customers");
     }
 
     async create(customer) {
@@ -13,10 +13,20 @@ class CustomerRepository {
             city: customer.city,
             phoneNumber: customer.phoneNumber,
             profilePicture: customer.profilePicture,
-        })
+        });
 
-        return result
+        return result;
+    }
+
+    async findCustomerByUserID(user_id) {
+        const snapshot = await this.collection
+            .where("user_id", "==", user_id)
+            .get();
+        if (snapshot.empty) {
+            return null;
+        }
+        return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
     }
 }
 
-module.exports = CustomerRepository
+module.exports = CustomerRepository;
