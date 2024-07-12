@@ -18,7 +18,10 @@ class SkillRepository {
 
         const skills = [];
         snapshot.forEach(doc => {
-            skills.push(doc.data().name);
+            skills.push({
+                id: doc.id,
+                ...doc.data().name
+            });
         })
 
         return skills;

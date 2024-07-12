@@ -18,8 +18,7 @@ module.exports = {
             
             return res.status(200).json({
                 success: true,
-                message: "Skill added successfully",
-                result
+                message: "Skill added successfully"
             });
         }
         catch (error) {
