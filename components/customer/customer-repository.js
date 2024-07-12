@@ -13,6 +13,7 @@ class CustomerRepository {
             city: customer.city,
             phoneNumber: customer.phoneNumber,
             profilePicture: customer.profilePicture,
+            skills: customer.skills
         });
 
         return result;
@@ -26,6 +27,17 @@ class CustomerRepository {
             return null;
         }
         return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
+    }
+
+    async updateCustomerByUserID(userID, updateData){
+        const snapshot = await this.collection
+            .where("userID", "==", userID)
+            .get();
+        if (snapshot.empty) {
+            return null;
+        }
+        
+        await snapshot.docs[0].ref.update(updateData)
     }
 }
 

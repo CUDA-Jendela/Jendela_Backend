@@ -26,7 +26,7 @@ module.exports = {
                 email,
                 password: hashedPassword,
                 role,
-                isVerified: false,
+                isVerified: "pending",
             };
             const userRef = await authRepo.createUser(newUser);
 

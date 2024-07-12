@@ -33,7 +33,7 @@ const createNGO = async (req, res) => {
                 success: false,
                 message: "User does not exist",
             });
-        } else if (existingUser.isVerified) {
+        } else if (existingUser.isVerified == "completed") {
             return res.status(400).json({
                 success: false,
                 message: "User already verified",
@@ -54,7 +54,7 @@ const createNGO = async (req, res) => {
         const ngoRef = await ngoRepo.createNGO(newNGO);
 
         await authRepo.updateUser(userID, {
-            isVerified: true,
+            isVerified: "completed",
         });
 
         res.status(200).json({

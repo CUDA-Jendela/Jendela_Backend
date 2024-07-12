@@ -24,7 +24,7 @@ module.exports = {
                     success: false,
                     message: "User does not exist",
                 });
-            } else if (existingUser.isVerified) {
+            } else if (existingUser.isVerified == "completed") {
                 return res.status(400).json({
                     success: false,
                     message: "User already verified",
@@ -40,15 +40,15 @@ module.exports = {
                 phoneNumber,
                 logoPicture
             );
-            const result = await businessRepo.create(newBusiness);
+            await businessRepo.create(newBusiness);
 
             await authRepo.updateUser(userID, {
-                isVerified: true,
+                isVerified: "completed",
             });
 
             return res.status(200).json({
                 success: true,
-                result,
+                message: "Business data created successfully"
             });
         } catch (error) {
             return res.status(500).json({
