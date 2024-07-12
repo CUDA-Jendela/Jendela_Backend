@@ -1,35 +1,29 @@
-const { messaging } = require("firebase-admin");
 const jwt = require("jsonwebtoken");
+const jwtSecret = process.env.JWT_SECRET;
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
-
-const authMiddleware = (roles = []) => {
-    return (req, res, next) => {
+module.exports = {
+    authMiddleware(req, res, next) {
         const authHeader = req.headers.authorization;
 
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return res
-                .status(401)
-                .json({ success: false, message: "Unauthorized" });
+        if (!authHeader || (authHeader && !authHeader.startsWith("Bearer "))) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authorized"
+            });
         }
 
-        const token = authHeader.split(" ")[1];
-
+        const token = authHeader.split(' ')[1];
         try {
-            const payload = jwt.verify(token, JWT_SECRET);
-            if (roles.length && !roles.includes(payload.role)) {
-                return res
-                    .status(403)
-                    .json({ success: false, message: "Forbidden" });
-            }
-            req.user = payload;
+            const decoded = jwt.verify(token, jwtSecret);
+            req.body.email = decoded.email;
+            req.body.role = decoded.role;
             next();
-        } catch (error) {
-            return res
-                .status(401)
-                .json({ success: false, message: "Unauthorized" });
         }
-    };
+        catch (error) {
+            return res.status(403).json({
+                success: false,
+                message: "Invalid JWT token!"
+            });
+        }
+    }
 };
-
-module.exports = authMiddleware;
