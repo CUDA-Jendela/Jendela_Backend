@@ -1,5 +1,6 @@
 const CourseRepository = require('./course-repository')
 const NGORepository = require('../ngo/ngo-repository')
+const SkillRepository = require('../skills/skill-repository')
 const Course = require('./course')
 
 module.exports = {
@@ -30,6 +31,51 @@ module.exports = {
             return res.status(500).json({
                 success: true,
                 message: "Failed to create course"
+            })
+        }
+    },
+
+    async getCourseList(req, res) {
+        const { role } = req.body;
+        const courseRepo = new CourseRepository();
+        const ngoRepo = new NGORepository();
+        const skillRepo = new SkillRepository();
+
+        if (role != "customer") {
+            return res.status(401).json({
+                success: false,
+                message: "User not authorized",
+            }); 
+        }
+
+        try {
+            const courses = await courseRepo.findAll()
+            
+            for (let course of courses) {
+                delete course.description;
+
+                const ngo = await ngoRepo.getNGO(course.ngoID);
+                course.ngoName = ngo.name;
+                course.ngoCity = ngo.city;
+
+                const skillNames = [];
+                for (let skillID of course.skills) {
+                    const skillData = await skillRepo.findByID(skillID)
+                    skillNames.push(skillData.name)
+                }
+                course.skills = skillNames;
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: "Course data retrieved successfully",
+                data: courses,
+            })
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Failed to retrieve course data"
             })
         }
     }

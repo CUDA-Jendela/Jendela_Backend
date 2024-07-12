@@ -23,6 +23,15 @@ class SkillRepository {
         return skill;
     }
 
+    async findByID(skillID) {
+        const doc = await this.collection.doc(skillID).get();
+        if (!doc.exists) {
+            return null;
+        }
+
+        return doc.data()
+    }
+
     async delete(skillID) {
         await this.collection.doc(skillID).delete()
     }

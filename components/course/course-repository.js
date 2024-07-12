@@ -18,6 +18,20 @@ class CourseRepository {
 
         return result;
     }
+
+    async findAll() {
+        const snapshot = await this.collection.get();
+
+        const courses = [];
+        snapshot.forEach(doc => {
+            courses.push({
+                id: doc.id,
+                ...doc.data()
+            })
+        })
+
+        return courses;
+    }
 }
 
 module.exports = CourseRepository;
