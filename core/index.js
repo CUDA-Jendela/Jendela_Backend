@@ -10,7 +10,8 @@ const businessApis = require("../components/business/business-api");
 const ngoApis = require("../components/ngo/ngo-api");
 const enrollmentApis = require("../components/course-enrollment/course-enrollment-api");
 const skillApis = require("../components/skills/skill-api");
-const chatApis = require("../components/chat/chat-api")
+const chatApis = require("../components/chat/chat-api");
+const courseApis = require("../components/course/course-api");
 
 class Application {
     constructor() {
@@ -51,6 +52,9 @@ class Application {
 
         // Chat apis
         this.express.use("/api", chatApis);
+
+        // Course apis
+        this.express.use("/api", courseApis);
     }
 
     getDatabase() {
