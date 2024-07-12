@@ -42,8 +42,10 @@ class NGORepository {
             return null;
         }
         
-        const ngo = snapshot.docs[0].data();
-        return ngo;
+        return {
+            id: snapshot.docs[0].id,
+            ...snapshot.docs[0].data()
+        }
     }
 }
 

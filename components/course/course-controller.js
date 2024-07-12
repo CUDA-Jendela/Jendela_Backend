@@ -29,7 +29,7 @@ module.exports = {
         catch (error) {
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: `Failed to create course successfuly: ${error.message}`
             })
         }
     },
@@ -39,13 +39,6 @@ module.exports = {
         const courseRepo = new CourseRepository();
         const ngoRepo = new NGORepository();
         const skillRepo = new SkillRepository();
-
-        if (role != "customer") {
-            return res.status(401).json({
-                success: false,
-                message: "User not authorized",
-            }); 
-        }
 
         try {
             const courses = await courseRepo.findAll();
