@@ -4,10 +4,10 @@ const authMiddleware = require("../../middlewares/auth-middleware");
 
 const router = express.Router();
 
-router.post("/NGO", authMiddleware(["NGO"]), ngoController.createNGO);
-router.get("/getNGO/:id", authMiddleware(["NGO"]), ngoController.getNGO);
-router.get("/getAllNGO", authMiddleware(["NGO"]), ngoController.getAllNGOs);
-router.put("/NGO/:id", authMiddleware(["NGO"]), ngoController.updateNGO);
-router.delete("/NGO/:id", authMiddleware(["NGO"]), ngoController.deleteNGO);
+router.post("/NGO", authMiddleware.authMiddleware, ngoController.createNGO);
+router.get("/getNGO/:id", authMiddleware.authMiddleware, ngoController.getNGO);
+router.get("/getAllNGO", authMiddleware.authMiddleware, ngoController.getAllNGOs);
+router.put("/NGO/:id", authMiddleware.authMiddleware, ngoController.updateNGO);
+router.delete("/NGO/:id", authMiddleware.authMiddleware, ngoController.deleteNGO);
 
 module.exports = router;

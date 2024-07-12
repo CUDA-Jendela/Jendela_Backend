@@ -1,22 +1,47 @@
-const { error } = require("console");
-const Repository = require("./ngo-repository");
-const { messaging } = require("firebase-admin");
+const AuthRepository = require("../auth/auth-repository");
+const NGO = require("./ngo");
+const NGORepository = require("./ngo-repository");
 
 const createNGO = async (req, res) => {
-    const {
-        name,
-        address,
-        city,
-        description,
-        email,
-        phoneNumber,
-        logo,
-        courses,
-    } = req.body;
-    const repo = new Repository();
+    const ngoRepo = new NGORepository();
+    const authRepo = new AuthRepository();
 
     try {
+        const {
+            userID,
+            role,
+            name,
+            address,
+            city,
+            description,
+            email,
+            phoneNumber,
+            logo,
+            courses,
+        } = req.body;
+
+        if (role != "ngo") {
+            return res.status(401).json({
+                success: false,
+                message: "User not authorized",
+            });
+        }
+
+        const existingUser = await authRepo.findUserById(userID);
+        if (!existingUser) {
+            return res.status(400).json({
+                success: false,
+                message: "User does not exist",
+            });
+        } else if (existingUser.isVerified) {
+            return res.status(400).json({
+                success: false,
+                message: "User already verified",
+            });
+        }
+
         const newNGO = {
+            userID,
             name,
             address,
             city,
@@ -26,8 +51,13 @@ const createNGO = async (req, res) => {
             logo,
             courses,
         };
-        const ngoRef = await repo.createNGO(newNGO);
-        res.status(201).json({
+        const ngoRef = await ngoRepo.createNGO(newNGO);
+
+        await authRepo.updateUser(userID, {
+            isVerified: true,
+        });
+
+        res.status(200).json({
             success: true,
             message: "NGO created successfully",
             ngoId: ngoRef.id,
@@ -42,10 +72,10 @@ const createNGO = async (req, res) => {
 
 const getNGO = async (req, res) => {
     const { id } = req.params;
-    const repo = new Repository();
+    const ngoRepo = new NGORepository();
 
     try {
-        const ngo = await repo.getNGO(id);
+        const ngo = await ngoRepo.getNGO(id);
         if (!ngo) {
             return res
                 .status(404)
@@ -58,10 +88,10 @@ const getNGO = async (req, res) => {
 };
 
 const getAllNGOs = async (req, res) => {
-    const repo = new Repository();
+    const ngoRepo = new NGORepository();
 
     try {
-        const ngos = await repo.getAllNGOs();
+        const ngos = await ngoRepo.getAllNGOs();
         res.status(200).json({ success: true, ngos });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
@@ -70,11 +100,17 @@ const getAllNGOs = async (req, res) => {
 
 const updateNGO = async (req, res) => {
     const { id } = req.params;
-    const updates = req.body;
-    const repo = new Repository();
+    const { role, ...updates } = req.body;
+    const ngoRepo = new NGORepository();
 
     try {
-        await repo.updateNGO(id, updates);
+        if (role != "ngo") {
+            return res.status(401).json({
+                success: false,
+                message: "User not authorized",
+            });
+        }
+        await ngoRepo.updateNGO(id, updates);
         res.status(200).json({
             success: true,
             message: "NGO updated successfully",
@@ -86,10 +122,17 @@ const updateNGO = async (req, res) => {
 
 const deleteNGO = async (req, res) => {
     const { id } = req.params;
-    const repo = new Repository();
+    const { role } = req.body;
+    const ngoRepo = new NGORepository();
 
     try {
-        await repo.deleteNGO(id);
+        if (role != "ngo") {
+            return res.status(401).json({
+                success: false,
+                message: "User not authorized",
+            });
+        }
+        await ngoRepo.deleteNGO(id);
         res.status(200).json({
             success: true,
             message: "NGO deleted successfully",

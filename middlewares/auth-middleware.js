@@ -8,22 +8,22 @@ module.exports = {
         if (!authHeader || (authHeader && !authHeader.startsWith("Bearer "))) {
             return res.status(401).json({
                 success: false,
-                message: "User not authorized"
+                message: "User not authorized",
             });
         }
 
-        const token = authHeader.split(' ')[1];
+        const token = authHeader.split(" ")[1];
         try {
             const decoded = jwt.verify(token, jwtSecret);
+            req.body.userID = decoded.id;
             req.body.email = decoded.email;
             req.body.role = decoded.role;
             next();
-        }
-        catch (error) {
+        } catch (error) {
             return res.status(403).json({
                 success: false,
-                message: "Invalid JWT token!"
+                message: "Invalid JWT token!",
             });
         }
-    }
+    },
 };

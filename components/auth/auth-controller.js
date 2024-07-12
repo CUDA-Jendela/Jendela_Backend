@@ -1,11 +1,12 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const AuthRepository = require("./auth-repository");
+const { messaging } = require("firebase-admin");
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
 module.exports = {
-    async connect(req, res) {
+    async register(req, res) {
         const { email, password, role } = req.body;
         const authRepo = new AuthRepository();
 
@@ -26,20 +27,21 @@ module.exports = {
                 isVerified: false,
             };
             const userRef = await authRepo.createUser(newUser);
+
             const token = jwt.sign(
                 {
                     id: userRef.id,
                     email: newUser.email,
                     role: newUser.role,
-                    isVerified: newUser.isVerified
+                    isVerified: newUser.isVerified,
                 },
                 JWT_SECRET,
-                { expiresIn: '1h' }
+                { expiresIn: "1h" }
             );
             res.status(201).json({
                 success: true,
                 message: "User registered successfully",
-                token
+                token,
             });
         } catch (error) {
             res.status(400).json({ success: false, message: error.message });
@@ -48,7 +50,7 @@ module.exports = {
 
     async login(req, res) {
         const { email, password } = req.body;
-        const repo = new Repository();
+        const repo = new AuthRepository();
 
         try {
             const user = await repo.findUserByEmail(email);
@@ -56,7 +58,10 @@ module.exports = {
                 throw new Error("User not found");
             }
 
-            const isPasswordValid = await bcrypt.compare(password, user.password);
+            const isPasswordValid = await bcrypt.compare(
+                password,
+                user.password
+            );
             if (!isPasswordValid) {
                 throw new Error("Invalid credentials");
             }
@@ -75,5 +80,20 @@ module.exports = {
         } catch (error) {
             res.status(401).json({ success: false, message: error.message });
         }
-    }
+    },
+
+    async getMe(req, res) {
+        const authRepo = new AuthRepository();
+        try {
+            const user = await authRepo.findUserById(req.body.id);
+            if (!user) {
+                return res
+                    .status(404)
+                    .json({ success: false, message: "User not found" });
+            }
+            res.status(200).json({ success: true, user });
+        } catch (error) {
+            res.status(400).json({ success: false, message: error.message });
+        }
+    },
 };

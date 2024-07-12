@@ -1,8 +1,8 @@
-const db = require('../../core/database/firebase')
+const db = require("../../core/database/firebase");
 
 class AuthRepository {
     constructor() {
-        this.collection = db.collection('users')
+        this.collection = db.collection("users");
     }
 
     async createUser(user) {
@@ -35,7 +35,7 @@ class AuthRepository {
         if (!doc.exists) {
             return null;
         }
-        return doc.data();
+        return { id: doc.id, ...doc.data() };
     }
 }
 

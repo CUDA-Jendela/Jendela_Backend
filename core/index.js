@@ -1,11 +1,11 @@
-const express = require('express')
-const cors = require('cors')
-const morgan = require('morgan')
-const serverConfig = require('./config/server-config')
-const db = require('./database/firebase')
+const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
+const serverConfig = require("./config/server-config");
+const db = require("./database/firebase");
 
-const authApis = require('../components/auth/auth-api')
-const customerApis = require('../components/customer/customer-api')
+const authApis = require("../components/auth/auth-api");
+const customerApis = require("../components/customer/customer-api");
 const ngoApis = require("../components/ngo/ngo-api");
 
 class Application {
@@ -26,17 +26,19 @@ class Application {
         this.express.get("/", (req, res) => {
             res.send("Hello, world!");
         });
-        
-        this.express.use("/api", ngoApis);
+
         // User and auth apis
-        this.express.use("/api", authApis)
+        this.express.use("/api", authApis);
 
         // Customer apis
-        this.express.use("/api", customerApis)
+        this.express.use("/api", customerApis);
+
+        // NGO apis
+        this.express.use("/api", ngoApis);
     }
 
     getDatabase() {
-        return this.db
+        return this.db;
     }
 
     run() {
