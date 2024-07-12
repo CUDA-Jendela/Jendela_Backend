@@ -35,7 +35,6 @@ module.exports = {
     },
 
     async getCourseList(req, res) {
-        const { role } = req.body;
         const courseRepo = new CourseRepository();
         const ngoRepo = new NGORepository();
         const skillRepo = new SkillRepository();
@@ -70,6 +69,43 @@ module.exports = {
             return res.status(500).json({
                 success: false,
                 message: "Failed to retrieve course data"
+            });
+        }
+    },
+
+    async getCourseDetail(req, res) {
+        const courseRepo = new CourseRepository();
+        const ngoRepo = new NGORepository();
+        const skillRepo = new SkillRepository();
+
+        try {
+            const { courseID } = req.params
+            const course = await courseRepo.findByID(courseID);
+
+            course.startDate = course.startDate.toDate().toISOString()
+            course.endDate = course.endDate.toDate().toISOString()
+
+            const ngo = await ngoRepo.getNGO(course.ngoID);
+            course.ngoName = ngo.name;
+            course.ngoCity = ngo.city;
+
+            const skillNames = [];
+            for (let skillID of course.skills) {
+                const skillData = await skillRepo.findByID(skillID);
+                skillNames.push(skillData.name);
+            }
+            course.skills = skillNames;
+
+            return res.status(200).json({
+                success: true,
+                message: "Course detail retrieved successfully",
+                data: course,
+            });
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Failed to retrieve course detail"
             });
         }
     },
