@@ -13,6 +13,17 @@ class SkillRepository {
         return result;
     }
 
+    async findAll() {
+        const snapshot = await this.collection.get();
+
+        const skills = [];
+        snapshot.forEach(doc => {
+            skills.push(doc.data().name);
+        })
+
+        return skills;
+    }
+
     async findByName(skillName) {
         const snapshot = await this.collection.where("name", "==", skillName).get()
         if (snapshot.empty) {

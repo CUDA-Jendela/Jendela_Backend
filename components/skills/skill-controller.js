@@ -47,5 +47,23 @@ module.exports = {
                 message: "Failed to delete skill"
             });
         }
+    },
+
+    async getSkills(req, res) {
+        try {
+            const skillRepo = new SkillRepository();
+            const skills = await skillRepo.findAll();
+            return res.status(200).json({
+                success: true,
+                message: "Skill data retrieved successfully",
+                data: skills
+            })
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Failed to retrieve skill data"
+            })
+        }
     }
 }
