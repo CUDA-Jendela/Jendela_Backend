@@ -3,7 +3,7 @@ class Course {
         this.ngoID = ngoID;
         this.name = name;
         this.description = description;
-        this.skills = this.skills;
+        this.skills = skills;
         this.quota = quota;
         this.startDate = startDate;
         this.endDate = endDate;

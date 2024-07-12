@@ -62,7 +62,7 @@ const getAllEnrollments = async (req, res) => {
     const customerRepo = new CustomerRepository();
 
     try {
-        const customer = await customerRepo.find;
+        const customer = await customerRepo.findCustomerByUserID(userID);
         if (!customer) {
             return res
                 .status(404)

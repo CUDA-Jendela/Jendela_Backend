@@ -4,6 +4,7 @@ const ChatRepository = require('./chat-repository')
 const vertexAI = new VertexAI({
     project: process.env.PROJECT_ID,
     location: "us-central1",
+    
 });
 
 const generativeModel = vertexAI.getGenerativeModel({

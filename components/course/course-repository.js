@@ -32,6 +32,18 @@ class CourseRepository {
 
         return courses;
     }
+
+    async findByID(id) {
+        const doc = await this.collection.doc(id).get();
+        if (!doc.exists) {
+            return null;
+        }
+
+        return {
+            id: doc.id, 
+            ...doc.data()
+        }
+    }
 }
 
 module.exports = CourseRepository;

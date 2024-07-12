@@ -137,4 +137,75 @@ module.exports = {
             res.status(400).json({ success: false, message: error.message });
         }
     },
+
+    async profile(req, res) {
+        const authRepo = new AuthRepository();
+        const customerRepo = new CustomerRepository();
+        const ngoRepo = new NGORepository();
+        const businessRepo = new BusinessRepository();
+
+        try {
+            const role = req.body.role;
+            const userID = req.body.userID;
+            const user = await authRepo.findUserById(userID);
+            if (!user) {
+                return res
+                    .status(404)
+                    .json({ success: false, message: "User not found" });
+            }
+
+            let additionalData = {};
+
+            if (role === "customer") {
+                const customer = await customerRepo.findCustomerByUserID(
+                    userID
+                );
+                console.log("customer", customer, userID);
+                additionalData = {
+                    name: customer.name,
+                    customer_id: customer.id,
+                    profile_picture: customer.profilePicture,
+                    phone_number: customer.phoneNumber,
+                    birth_date: customer.birthDate,
+                    city: customer.city,
+                };
+            } else if (user.role === "business") {
+                const business = await businessRepo.findBusinessByUserID(
+                    userID
+                );
+                additionalData = {
+                    name: business.name,
+                    business_id: business.id,
+                    industry: business.industry,
+                    description: business.description,
+                    address: business.address,
+                    phoneNumber: business.phoneNumber,
+                    logoPicture: business.logoPicture,
+                    is_verified: business.isVerified
+                };
+            } else if (user.role === "ngo") {
+                const ngo = await ngoRepo.findNGOByUserID(userID);
+                additionalData = { 
+                    name: ngo.name, 
+                    ngo_id: ngo.id, 
+                    address: ngo.address, 
+                    city: ngo.city, 
+                    description: ngo.description,
+                    phoneNumber: ngo.phoneNumber,
+                    logo: ngo.logo
+                };
+            }
+            const response = {
+                id: user.id,
+                email: user.email,
+                role: user.role,
+                isVerified: user.isVerified,
+                username: user.username,
+                ...additionalData,
+            };
+            res.status(200).json({ success: true, user: response });
+        } catch (error) {
+            res.status(400).json({ success: false, message: error.message });
+        }
+    },
 };
