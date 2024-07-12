@@ -1,4 +1,4 @@
-module.export = function checkSimilarities(arr1, arr2) {
+module.exports = function checkSimilarities(arr1, arr2) {
     const similarities = 0;
 
     arr1.forEach(item => {
