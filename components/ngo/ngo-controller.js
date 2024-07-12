@@ -14,10 +14,8 @@ const createNGO = async (req, res) => {
             address,
             city,
             description,
-            email,
             phoneNumber,
-            logo,
-            courses,
+            logo
         } = req.body;
 
         if (role != "ngo") {
@@ -45,11 +43,9 @@ const createNGO = async (req, res) => {
             name,
             address,
             city,
-            email,
             description,
             phoneNumber,
-            logo,
-            courses,
+            logo
         };
         const ngoRef = await ngoRepo.createNGO(newNGO);
 
@@ -60,10 +56,9 @@ const createNGO = async (req, res) => {
         res.status(200).json({
             success: true,
             message: "NGO created successfully",
-            ngoId: ngoRef.id,
         });
     } catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             success: false,
             message: error.message,
         });

@@ -29,7 +29,7 @@ module.exports = {
         }
         catch (error) {
             return res.status(500).json({
-                success: true,
+                success: false,
                 message: "Failed to create course"
             })
         }
