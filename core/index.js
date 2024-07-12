@@ -68,7 +68,6 @@ class Application {
     run() {
         this.express.listen(this.serverConfig.port, () => {
             this.setupServer();
-            console.log(this.db);
             console.log(
                 `Server listening on http://localhost:${this.serverConfig.port}`
             );
