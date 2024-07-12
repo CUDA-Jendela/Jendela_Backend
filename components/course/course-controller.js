@@ -53,6 +53,8 @@ module.exports = {
             
             for (let course of courses) {
                 delete course.description;
+                course.startDate = course.startDate.toDate().toISOString()
+                course.endDate = course.endDate.toDate().toISOString()
 
                 const ngo = await ngoRepo.getNGO(course.ngoID);
                 course.ngoName = ngo.name;
