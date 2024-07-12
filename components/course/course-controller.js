@@ -49,7 +49,7 @@ module.exports = {
         }
 
         try {
-            const courses = await courseRepo.findAll()
+            const courses = await courseRepo.findAll();
             
             for (let course of courses) {
                 delete course.description;
@@ -60,8 +60,8 @@ module.exports = {
 
                 const skillNames = [];
                 for (let skillID of course.skills) {
-                    const skillData = await skillRepo.findByID(skillID)
-                    skillNames.push(skillData.name)
+                    const skillData = await skillRepo.findByID(skillID);
+                    skillNames.push(skillData.name);
                 }
                 course.skills = skillNames;
             }
@@ -70,13 +70,50 @@ module.exports = {
                 success: true,
                 message: "Course data retrieved successfully",
                 data: courses,
-            })
+            });
         }
         catch (error) {
             return res.status(500).json({
                 success: false,
                 message: "Failed to retrieve course data"
-            })
+            });
+        }
+    },
+
+    async getCourseLocations(req, res) {
+        const { role } = req.body;
+        const courseRepo = new CourseRepository();
+        const ngoRepo = new NGORepository();
+
+        if (role != "customer") {
+            return res.status(401).json({
+                success: false,
+                message: "User not authorized",
+            }); 
+        }
+
+        try {
+            const courses = await courseRepo.findAll();
+            
+            const cities = [];
+            for (let course of courses) {
+                const ngo = await ngoRepo.getNGO(course.ngoID);
+                if (!cities.includes(ngo.city)) {
+                    cities.push(ngo.city);
+                }
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: "Course locations retrieved successfully",
+                data: cities
+            });
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Failed to retrieve course locations"
+            });
         }
     }
 }

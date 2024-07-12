@@ -4,5 +4,6 @@ const courseController = require('./course-controller')
 
 router.post("/course", authMiddleware, courseController.addCourse)
 router.get("/course/list", authMiddleware, courseController.getCourseList)
+router.get("/course/location", authMiddleware, courseController.getCourseLocations)
 
 module.exports = router
