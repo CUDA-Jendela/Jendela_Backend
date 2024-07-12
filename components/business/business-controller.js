@@ -1,9 +1,9 @@
 const AuthRepository = require("../auth/auth-repository")
-const { default: Business } = require("./business")
+const Business = require("./business")
 const BusinessRepository = require("./business-repository")
 
 module.exports = {
-    async addBusinessData(req, res, next) {
+    async addBusinessData(req, res) {
         const authRepo = new AuthRepository()
         const businessRepo = new BusinessRepository()
 

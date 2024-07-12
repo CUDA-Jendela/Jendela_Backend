@@ -1,9 +1,9 @@
 const AuthRepository = require('../auth/auth-repository')
-const { default: Customer } = require('./customer')
+const Customer = require('./customer')
 const CustomerRepository = require('./customer-repository')
 
 module.exports = {
-    async addCustomerData(req, res, next) {
+    async addCustomerData(req, res) {
         const authRepo = new AuthRepository()
         const customerRepo = new CustomerRepository()
 
