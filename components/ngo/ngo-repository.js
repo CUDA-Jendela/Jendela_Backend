@@ -35,6 +35,16 @@ class NGORepository {
     async deleteNGO(id) {
         await this.collection.doc(id).delete();
     }
+
+    async findNGOByUserID(userID) {
+        const snapshot = await this.collection.where("userID", "==", userID).get();
+        if (snapshot.empty) {
+            return null;
+        }
+        
+        const ngo = snapshot.docs[0].data();
+        return ngo;
+    }
 }
 
 module.exports = NGORepository;
