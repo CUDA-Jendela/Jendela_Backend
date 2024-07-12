@@ -1,6 +1,7 @@
 const CustomerRepository = require('../customer/customer-repository')
 const CourseRepository = require('../course/course-repository')
 const NGORepository = require('../ngo/ngo-repository')
+const SkillRepository = require('../skills/skill-repository')
 const checkSimilarities = require('./recommendation-algorithm')
 
 module.exports = {
@@ -8,6 +9,7 @@ module.exports = {
         const customerRepo = new CustomerRepository();
         const courseRepo = new CourseRepository();
         const ngoRepo = new NGORepository();
+        const skillRepo = new SkillRepository();
 
         try {
             const { userID, role } = req.body
