@@ -74,18 +74,43 @@ The backbone of second chances: Jendela's backend system powers the platform wit
     ``` bash
     $ git clone https://github.com/CUDA-Jendela/Jendela_Backend.git
     ```
-2. Create a `.env` file inside the repository directory using `.env.example` file as the template. You can keep the variables blank. The server should automatically use port `8080` as the default port.
-3. Run the server using this following command, make sure you have docker on your device.
+2. Create a `.env` file inside the repository directory using `.env.example` file as the template. You should add information about your own Google project to the `.env` file 
+3. Run the server using this following command, make sure you have Docker Desktop on your device.
     ``` bash
-    $ docker-compose up -d
+    $ docker compose up
     ```
-4. Glutara backend server should be running. You can also check the server by opening http://localhost:8080/api
+4. Jendela backend server should be running. You can also check the server by opening http://localhost:8080
     
 ## 🔑 &nbsp;List of Endpoints
 
 | Endpoint                             |  Method  |   Usage  |
 | ------------------------------------ | :------: | -------- |
-| /api/auth/register                   | POST     | Users can register and create account on Glutara App
+| /api/auth/register                   | POST     | Users can register and create account on Jendela
+| /api/auth/login                      | POST     | Users can login to Jendela using their existing account
+| /api/user/me                         | GET      | Users can get essential informations about themselves
+| /api/business                        | POST     | Users as business partners can fill information/data about themselves
+| /api/customer/1                      | POST     | Users as customers (ex-convicts) can fill the first part of information/data about themselves
+| /api/customer/2                      | POST     | Users as customers (ex-convicts) can fill the second part of information/data about themselves
+| /api/ngo                             | POST     | Users as NGOs can fill information/data about themselves
+| /api/ngo/:id                         | GET      | Users can find information about a NGO
+| /api/ngo/all                         | GET      | Users can find information about all NGOs
+| /api/ngo/:id                         | PUT      | Users can update information about a NGO
+| /api/ngo/:id                         | DELETE   | Users can delete information about a NGO
+| /api/course                          | POST     | Users as NGOs can create new course
+| /api/course/list                     | GET      | Users can see all courses available
+| /api/course/:courseID                | GET      | Users can see a course detail
+| /api/course/location                 | GET      | Users can find cities where all courses located
+| /api/course-enrollment               | POST     | Users as customers (ex-convicts) can enroll themselves to a course
+| /api/course-enrollment/:id           | GET      | Users can see a course enrollment detail
+| /api/course-enrollment/all           | GET      | Users can see all course enrollments detail
+| /api/course-enrollment/:id           | PUT      | Users can update information about a course-enrollment
+| /api/course-enrollment/:id           | DELETE   | Users can delete information about a course-enrollment
+| /api/skill                           | GET      | Users can find information about all skills
+| /api/skill                           | POST     | Users can create new skill
+| /api/skill                           | DELETE   | Users can delete existing skill
+| /api/chat                            | GET      | Users can get their chat history with AI assistant
+| /api/chat                            | POST     | Users can ask new question to AI assistant
+| /api/recommendation/customer         | GET      | Users as customers (ex-convicts) can find courses recommended for them
 
 ## 👥 &nbsp;Contributors
 
